@@ -27,8 +27,8 @@ namespace ServiceSignerBase.Data
         public string Version { get; set; } = "1.0.1"; 
         public T Payload { get ;  set; }
 
-        
-        public SignedDataHeader? Header { get ; set; }
+
+        public SignedDataHeader? Header { get; set; }
 
         public  void ValidateSignature(string publicKey)
         {

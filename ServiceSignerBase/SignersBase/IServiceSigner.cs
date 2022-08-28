@@ -16,7 +16,7 @@ namespace ServiceSignerBase.Signers
 
          string SignData(string base64data, string privateKey, string digestname);
 
-        string SignData(byte[] base64data, byte[] privateKey, byte[] digestname);
+       // string SignData(byte[] base64data, byte[] privateKey, byte[] digestname);
 
         void VerifySignature(string base64data, string base64signature, string publicKeyString, string digestname);
 

@@ -3,6 +3,7 @@
 using ServiceSignerBase;
 using ServiceSignerBase.Data;
 using ServiceSignerBase.Extentions;
+using ServiceSignerBase.ServiceSigner;
 using ServiceSignerBase.Signers;
 
 namespace SignTest
@@ -24,6 +25,8 @@ namespace SignTest
                 }
             };
 
+           
+            
 
             SrvSignedContainer<SomeModel> srvSignedContainer = new SrvSignedContainer<SomeModel>(model, "name/surname");
 
@@ -36,6 +39,35 @@ namespace SignTest
 
         }
 
+        private static void TestServiceSignerWithMOdel()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.ToPembase64String();
+            var pubstring = keypair.Public.ToPembase64String();
+            ServiceSigner signer = new ServiceSigner(privstring, pubstring);
+
+            SomeModel model = new SomeModel()
+            {
+                Name = "farid",
+                Surname = "Ismayilzada",
+                TestData = "Test",
+                InnerModel = new InnerModel()
+                {
+                    Year = "2022"//,
+                    //HidedObject = new ThirdObject { HidedName = "Secret" }
+                }
+            };
+
+            var rs = signer.SignDataModel(model);
+
+
+
+        }
         private static void TestServiceSigner()
         {
             string signalg = "SHA-256withRSA";
@@ -62,6 +94,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
+            TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
             /*

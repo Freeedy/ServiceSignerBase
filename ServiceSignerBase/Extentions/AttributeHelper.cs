@@ -11,7 +11,7 @@ namespace ServiceSignerBase.Extentions
     public static  class AttributeHelper
     {
 
-        public static IEnumerable<SignablePropertyInfo> GetPropertiesInfo(object obj, string route = "")
+        public static List<SignablePropertyInfo> GetPropertiesInfo(object obj, string route = "")
         {
             List<SignablePropertyInfo> results = new List<SignablePropertyInfo>();
 

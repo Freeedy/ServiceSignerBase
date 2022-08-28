@@ -12,25 +12,47 @@ namespace ServiceSignerBase.ServiceSigner
 {
     public class ServiceSigner  
     {
-        public string Algorithm { get { return "SHA-256withRSA"; } }
+        public string Algorithm { get { return Constants.SignatureAlgorithmRsaDefault; } }
 
-        private RsaServiceSigner _signer; 
+        private RsaServiceSigner _signer;
 
-        public ServiceSigner(string privatekey , string publickey )
+        string _privateKey; 
+        public ServiceSigner(string privatekey , string publickey=null )
         {
+            _privateKey = privatekey;
             _signer = new RsaServiceSigner();   
         }
 
 
 
+        //Tagged: Version 1
         public SrvSignedContainer<T> SignDataModel<T>(T MOdel)
         {
+            SrvSignedContainer<T> container = new SrvSignedContainer<T>();
             if (MOdel == null) return null;
-            var atrts = AttributeHelper.GetPropertiesInfo(MOdel); 
+            container.Payload = MOdel;
+            var atrts = AttributeHelper.GetPropertiesInfo(MOdel);
+            if (atrts.Count == 0) return container;
 
-            
+            string tobesigned = "";
+            string headerPattern = "";
 
-            return null;
+            for (int i = 0; i < atrts.Count; i++)
+            {
+                tobesigned += atrts[i].Value.ToString();
+                headerPattern += atrts[i].Route;
+                if (i != atrts.Count - 1) headerPattern += "/"; 
+            }
+
+            string signature = _signer.SignData(tobesigned.ToByteArray().ToBase64String(), _privateKey,Algorithm);
+
+            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature};
+            return container;
+            //Constants.SignatureAlgorithmRsaDefault
+
+
+
+          //  return null;
         }
 
 
