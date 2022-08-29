@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceSignerBase.Exceptions;
 
 namespace ServiceSignerBase.Data
 {
@@ -32,6 +33,32 @@ namespace ServiceSignerBase.Data
 
         public  void ValidateSignature(string publicKey)
         {
+            if (Header==null) throw new ArgumentNullException($"Header Is null ");
+
+            if (string.IsNullOrWhiteSpace(Header.Signature))
+            {
+                throw new SrvInvalidSignatureException("Signature emptiy!");
+            }
+
+
+            string[] pattern = Header.Pattern.Split("/"); 
+
+            string payload = string.Empty;
+
+
+            foreach (string item in pattern)
+            {
+                var propval = AttributeHelper.GetPropValue(Payload, item);
+
+                if (propval == null) throw new SrvInvalidSignatureException($"{item} property is null!");
+
+                payload += propval.Value.ToString(); 
+            }
+
+
+
+
+
 
         }
         
