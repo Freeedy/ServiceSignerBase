@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServiceSignerBase.ServiceSigner
+namespace ServiceSignerBase
 {
     public class ServiceSigner  
     {

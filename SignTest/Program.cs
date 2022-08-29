@@ -3,8 +3,8 @@
 using ServiceSignerBase;
 using ServiceSignerBase.Data;
 using ServiceSignerBase.Extentions;
-using ServiceSignerBase.ServiceSigner;
 using ServiceSignerBase.Signers;
+using System.Text.Json;
 
 namespace SignTest
 {
@@ -58,14 +58,14 @@ namespace SignTest
                 TestData = "Test",
                 InnerModel = new InnerModel()
                 {
-                    Year = "2022"//,
-                    //HidedObject = new ThirdObject { HidedName = "Secret" }
+                    Year = "2022",
+                    HidedObject = new ThirdObject { HidedName = "Secret" }
                 }
             };
 
             var rs = signer.SignDataModel(model);
 
-
+            var text = JsonSerializer.Serialize(rs);
 
         }
         private static void TestServiceSigner()
