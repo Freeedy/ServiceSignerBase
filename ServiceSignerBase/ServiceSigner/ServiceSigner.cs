@@ -55,7 +55,22 @@ namespace ServiceSignerBase
           //  return null;
         }
 
+        public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)
+        {
+            if (container.Header == null || string.IsNullOrWhiteSpace(container.Header.Signature)) throw new ArgumentNullException($"{nameof(container.Header.Signature)} is null or empity");
 
+            string signeddata = "";
+
+            string[] pattern = container.Header.Pattern.Split('/');
+
+            foreach (string patt in pattern)
+            {
+                var  val = AttributeHelper.GetPropValue(container.Payload, patt).Value;
+                signeddata += val.ToString();
+
+            }
+            _signer.VerifySignature(signeddata.ToByteArray().ToBase64String(), container.Header.Signature, publickey, Algorithm);
+        }
 
     }
 }

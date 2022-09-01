@@ -67,6 +67,8 @@ namespace SignTest
 
             var text = JsonSerializer.Serialize(rs);
 
+            signer.ValidateSignatureContainer(rs,pubstring);
+
         }
         private static void TestServiceSigner()
         {
@@ -94,7 +96,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
-            TestServiceSignerWithMOdel();
+           // TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
             /*
