@@ -32,11 +32,13 @@ namespace SignTest
 
         public ThirdObject HidedObject { get; set; }
 
+        
     }
 
     public class ThirdObject
     {
         [Signable]
         public string  HidedName { get; set; }
+        public InnerModel ModelSam { get; set; }
     }
 }

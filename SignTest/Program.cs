@@ -20,8 +20,8 @@ namespace SignTest
                 TestData = "Test",
                 InnerModel = new InnerModel()
                 {
-                    Year = "2022"//,
-                    //HidedObject = new ThirdObject { HidedName = "Secret" }
+                    Year = "2022",
+                    HidedObject = new ThirdObject { HidedName = "Secret", ModelSam = new InnerModel { Id = "12" } }
                 }
             };
 
@@ -33,6 +33,8 @@ namespace SignTest
             var result = AttributeHelper.GetPropertiesInfo(model);
             var testdata = AttributeHelper.GetPropValue(model, "name");
             var testdata1 = AttributeHelper.GetPropValue(model, "innermodel.Year");
+            var testdata2 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.HidedName");
+            var testdata3 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.ModelSam.id");
 
 
             AttributeHelper.GetSignableProperties(model);
@@ -96,7 +98,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
-           // TestServiceSignerWithMOdel();
+            TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
             /*
