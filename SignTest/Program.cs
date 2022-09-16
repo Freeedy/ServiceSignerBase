@@ -21,8 +21,8 @@ namespace SignTest
                 TestData = "Test",
                 InnerModel = new InnerModel()
                 {
-                    Year = "2022"//,
-                    //HidedObject = new ThirdObject { HidedName = "Secret" }
+                    Year = "2022",
+                    HidedObject = new ThirdObject { HidedName = "Secret", ModelSam = new InnerModel { Id = "12" } }
                 }
             };
 
@@ -34,6 +34,8 @@ namespace SignTest
             var result = AttributeHelper.GetPropertiesInfo(model);
             var testdata = AttributeHelper.GetPropValue(model, "name");
             var testdata1 = AttributeHelper.GetPropValue(model, "innermodel.Year");
+            var testdata2 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.HidedName");
+            var testdata3 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.ModelSam.id");
 
             PropertyInfo info = model.GetType().GetProperty("InnerModel.Year");
             Object val = info.GetValue(model, null);
@@ -70,6 +72,8 @@ namespace SignTest
             var rs = signer.SignDataModel(model);
 
             var text = JsonSerializer.Serialize(rs);
+
+            signer.ValidateSignatureContainer(rs,pubstring);
 
         }
         private static void TestServiceSigner()

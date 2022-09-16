@@ -110,7 +110,7 @@ namespace ServiceSignerBase.Extentions
                 if(temppath!=null) result.Route=src.GetType()+".";
                 
                 var temp = propName.Split(new char[] { '.' }, 2);
-                return GetPropValue(GetPropValue(src, temp[0],result), temp[1],result);
+                return GetPropValue(GetPropValue(src, temp[0],result).Value, temp[1],result);
             }
             else
             {
