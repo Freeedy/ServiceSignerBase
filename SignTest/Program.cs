@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Reflection;
 using ServiceSignerBase;
 using ServiceSignerBase.Data;
 using ServiceSignerBase.Extentions;
@@ -33,6 +34,9 @@ namespace SignTest
             var result = AttributeHelper.GetPropertiesInfo(model);
             var testdata = AttributeHelper.GetPropValue(model, "name");
             var testdata1 = AttributeHelper.GetPropValue(model, "innermodel.Year");
+
+            PropertyInfo info = model.GetType().GetProperty("InnerModel.Year");
+            Object val = info.GetValue(model, null);
 
 
             AttributeHelper.GetSignableProperties(model);
@@ -94,7 +98,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
-            TestServiceSignerWithMOdel();
+           // TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
             /*
