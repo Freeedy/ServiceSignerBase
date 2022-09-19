@@ -23,6 +23,10 @@ namespace ServiceSignerBase
             _signer = new RsaServiceSigner();   
         }
 
+        public ServiceSigner(byte[] privatekey , byte [] publickey )
+        {
+            
+        }
 
 
         //Tagged: Version 1
