@@ -48,9 +48,9 @@ namespace ServiceSignerBase
                 if (i != atrts.Count - 1) headerPattern += "/"; 
             }
 
-            string signature = _signer.SignData(tobesigned.ToByteArray().ToBase64String(), _privateKey,Algorithm);
+            byte[] signature = _signer.SignBytes(tobesigned.ToByteArray(), _privateKey,Algorithm);
 
-            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature};
+            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase64String()};
             return container;
             //Constants.SignatureAlgorithmRsaDefault
 
