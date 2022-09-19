@@ -37,8 +37,8 @@ namespace SignTest
             var testdata2 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.HidedName");
             var testdata3 = AttributeHelper.GetPropValue(model, "innermodel.HidedObject.ModelSam.id");
 
-            PropertyInfo info = model.GetType().GetProperty("InnerModel.Year");
-            Object val = info.GetValue(model, null);
+            //PropertyInfo info = model.GetType().GetProperty("InnerModel.Year");
+           // Object val = info.GetValue(model, null);
 
 
             AttributeHelper.GetSignableProperties(model);
