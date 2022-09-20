@@ -40,7 +40,7 @@ namespace SignTest
             //PropertyInfo info = model.GetType().GetProperty("InnerModel.Year");
            // Object val = info.GetValue(model, null);
 
-
+            
             AttributeHelper.GetSignableProperties(model);
 
         }
@@ -102,7 +102,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
-           // TestServiceSignerWithMOdel();
+           TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
             /*
