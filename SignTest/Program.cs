@@ -1,5 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 using ServiceSignerBase;
 using ServiceSignerBase.Data;
 using ServiceSignerBase.Extentions;
@@ -25,8 +33,8 @@ namespace SignTest
                 }
             };
 
-           
-            
+
+
 
             SrvSignedContainer<SomeModel> srvSignedContainer = new SrvSignedContainer<SomeModel>(model, "name/surname");
 
@@ -41,6 +49,28 @@ namespace SignTest
 
         }
 
+
+        public static void KeySerializeDecerialize()
+        {
+            RsaKeyPairGenerator g = new RsaKeyPairGenerator();
+            g.Init(new KeyGenerationParameters(new SecureRandom(), 1024));
+            var pair = g.GenerateKeyPair();
+
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfoFactory.CreatePrivateKeyInfo(pair.Private); 
+            byte[] serializedPrivateBytes = privateKeyInfo.ToAsn1Object().GetDerEncoded();
+            string serializedPrivate = Convert.ToBase64String(serializedPrivateBytes);
+            SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(pair.Public);
+            byte[] serializedPublicBytes = publicKeyInfo.ToAsn1Object().GetDerEncoded(); 
+            string serializedPublic = Convert.ToBase64String(serializedPublicBytes);
+
+
+
+            RsaPrivateCrtKeyParameters privateKey = (RsaPrivateCrtKeyParameters)PrivateKeyFactory.CreateKey(Convert.FromBase64String(serializedPrivate));
+            RsaKeyParameters publicKey = (RsaKeyParameters)PublicKeyFactory.CreateKey(Convert.FromBase64String(serializedPublic));
+            var res = pair.Private.Equals(privateKey);
+            var res1 = pair.Public.Equals(publicKey);
+
+        }
         private static void TestServiceSignerWithMOdel()
         {
             string signalg = "SHA-256withRSA";
@@ -69,7 +99,7 @@ namespace SignTest
 
             var text = JsonSerializer.Serialize(rs);
 
-            signer.ValidateSignatureContainer(rs,pubstring);
+            signer.ValidateSignatureContainer(rs, pubstring);
 
         }
         private static void TestServiceSigner()
@@ -98,6 +128,7 @@ namespace SignTest
         [STAThread]
         private static void Main(string[] args)
         {
+            KeySerializeDecerialize();
             TestServiceSignerWithMOdel();
             AttributeTest();
             TestServiceSigner();
