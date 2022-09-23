@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignTest", "SignTest\SignTest.csproj", "{41C49022-D986-46B3-9173-042F55381D59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignerServiceTest", "SignerServiceTest\SignerServiceTest.csproj", "{FE76F66A-D1A0-4F7E-BE10-39D4E108ECF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignerServiceTest", "SignerServiceTest\SignerServiceTest.csproj", "{FE76F66A-D1A0-4F7E-BE10-39D4E108ECF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
