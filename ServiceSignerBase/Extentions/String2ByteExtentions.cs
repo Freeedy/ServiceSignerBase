@@ -1,7 +1,11 @@
-﻿using Org.BouncyCastle.Crypto;
+﻿using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -72,16 +76,40 @@ namespace ServiceSignerBase
             }
         }
 
-        public static string KeyParam2base64String(this AsymmetricKeyParameter key)
+        public static byte[] PrivateKeyParam2Bytes(this AsymmetricKeyParameter key)
         {
-            
+
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfoFactory.CreatePrivateKeyInfo(key);
+            byte[] serializedPrivateBytes = privateKeyInfo.ToAsn1Object().GetDerEncoded();
+           
             //  key.as
-            return null;
+            return serializedPrivateBytes;
         }
 
-        public static AsymmetricKeyParameter StringKeyToKeyParam(this string keystring)
+        public static byte[] PublicKeyParam2Bytes(this AsymmetricKeyParameter key)
         {
-           var keyparam = PrivateKeyFactory.CreateKey(keystring.FromBase64String());
+
+            SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(key);
+            byte[] serializedPublicBytes = publicKeyInfo.ToAsn1Object().GetDerEncoded();
+
+            //  key.as
+            return serializedPublicBytes;
+        }
+
+
+
+
+        public static AsymmetricKeyParameter PublicKeyFromBytes(this byte[] keybytes)
+        {
+            var keyparam = PublicKeyFactory.CreateKey(keybytes);
+
+            return keyparam;
+        }
+
+
+        public static AsymmetricKeyParameter PrivateKeyFromBytes(this byte[] keybytes)
+        {
+           var keyparam = PrivateKeyFactory.CreateKey(keybytes);
 
             return keyparam;
         }
