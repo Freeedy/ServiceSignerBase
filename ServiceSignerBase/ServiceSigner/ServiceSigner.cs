@@ -43,6 +43,7 @@ namespace ServiceSignerBase
 
             for (int i = 0; i < atrts.Count; i++)
             {
+                // tobesigned += atrts[i].Value.ToString();
                 tobesigned += atrts[i].Value.ToString();
                 headerPattern += atrts[i].Route;
                 if (i != atrts.Count - 1) headerPattern += "/"; 

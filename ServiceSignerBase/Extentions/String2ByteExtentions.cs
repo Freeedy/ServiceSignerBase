@@ -146,12 +146,12 @@ namespace ServiceSignerBase
             return Base58.Encode(serializedPublicBytes);
         }
 
-        public static AsymmetricKeyParameter DeserializePrivateKeyFromBase58(string privatebase58)
+        public static AsymmetricKeyParameter DeserializePrivateKeyFromBase58(this string privatebase58)
         {
           return   PrivateKeyFactory.CreateKey(Base58.Decode(privatebase58));
         }
 
-        public static AsymmetricKeyParameter DeserializePublicKeyFromBase58(string publicbase58)
+        public static AsymmetricKeyParameter DeserializePublicKeyFromBase58(this string publicbase58)
         {
             return PublicKeyFactory.CreateKey(Base58.Decode(publicbase58));
         }

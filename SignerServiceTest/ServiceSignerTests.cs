@@ -42,6 +42,24 @@ namespace SignerServiceTest
         }
 
         [Fact]
+        public async Task GenerateKeyAndSignbase58_test()
+        {
+            var generator = Util.GetKeyPairProvider("rsa");
+
+            var pair = generator.GenerateServiceKeyPair(2048);
+
+
+            string nonce = "signeit".ToByteArray().ToBase64String();
+
+            string privateKey = pair.Private.SerializePrivateKeyToBase58();
+
+            string publickey = pair.Public.SerializePrivateKeyToBase58(); 
+            string signature = Util.GetSigner("rsa").SignData(nonce, privateKey, Constants.SignatureAlgorithmRsaDefault);
+
+            Assert.NotNull(signature);
+        }
+
+        [Fact]
         public async Task GenerateKeyAndSignAndVerify_test()
         {
 

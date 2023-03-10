@@ -30,7 +30,7 @@ namespace ServiceSignerBase.Signers
 
         public byte[] SignBytes(byte[] datatoSign, string privatekey, string digestname = "SHA-256withRSA")
         {
-            return Sign(datatoSign, privatekey.ToPRivateKey(), digestname); 
+            return Sign(datatoSign, privatekey.DeserializePrivateKeyFromBase58(), digestname); 
         }
 
         public void VerifySignature(string base64data , string base64signature , string publicKeyString , string digestname= "SHA-256withRSA")
