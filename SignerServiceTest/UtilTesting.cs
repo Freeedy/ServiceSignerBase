@@ -28,14 +28,14 @@ namespace SignerServiceTest
         }
 
 
-        [Theory]
-        [InlineData(DateTime.Now)]
-        [InlineData(Convert.ToDateTime("2023-03-01"))]
-        public async Task DateTimetoByteConvertionTest(DateTime dt )
-        {
-            byte[] expected = BitConverter.GetBytes(dt.Ticks); 
 
-            byte[] actual = Helper.ObjectToByteArray(dt);
+        [Fact]
+        public async Task DateTimetoByteConvertionTest( )
+        {
+            var date = DateTime.Now;
+            byte[] expected = BitConverter.GetBytes(date.Ticks); 
+
+            byte[] actual = Helper.ObjectToByteArray(date);
             Assert.Equal(expected, actual);
         }
     }

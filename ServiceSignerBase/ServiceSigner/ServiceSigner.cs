@@ -38,18 +38,19 @@ namespace ServiceSignerBase
             var atrts = AttributeHelper.GetPropertiesInfo(MOdel);
             if (atrts.Count == 0) return container;
 
-            string tobesigned = "";
+            byte[] tobesigned = new byte[0];
             string headerPattern = "";
 
             for (int i = 0; i < atrts.Count; i++)
             {
                 // tobesigned += atrts[i].Value.ToString();
-                tobesigned += atrts[i].Value.ToString();
+                byte[] temp = Helper.ObjectToByteArray(atrts[i]); 
+                tobesigned = tobesigned.Concat(temp).ToArray();
                 headerPattern += atrts[i].Route;
                 if (i != atrts.Count - 1) headerPattern += "/"; 
             }
 
-            byte[] signature = _signer.SignBytes(tobesigned.ToByteArray(), _privateKey,Algorithm);
+            byte[] signature = _signer.SignBytes(tobesigned, _privateKey,Algorithm);
 
             container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase64String()};
             return container;
