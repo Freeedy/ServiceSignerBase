@@ -2,6 +2,7 @@
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
+using ServiceSignerBase.BaseEncoding;
 using ServiceSignerBase.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -33,9 +34,10 @@ namespace ServiceSignerBase.Signers
             return Sign(datatoSign, privatekey.DeserializePrivateKeyFromBase58(), digestname); 
         }
 
-        public void VerifySignature(string base64data , string base64signature , string publicKeyString , string digestname= "SHA-256withRSA")
+        public void VerifySignature(string base58data , string base58signature , string publicKeyString , string digestname= "SHA-256withRSA")
         {
-            if(! Verify(base64data.FromBase64String() ,base64signature.FromBase64String() ,publicKeyString.ToPublicKey(), digestname))
+            if(! Verify(Base58.Decode(base58data) ,Base58.Decode(base58signature) ,
+                publicKeyString.DeserializePublicKeyFromBase58(), digestname))
             {
                 throw new SrvInvalidSignatureException($" Invalid Service Signature , DigestAlg :{digestname}"); 
             }

@@ -1,4 +1,5 @@
 ﻿using ServiceSignerBase;
+using ServiceSignerBase.BaseEncoding;
 using ServiceSignerBase.Extentions;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,24 @@ namespace SignerServiceTest
         [Fact]
         public async Task GenerateKeyAndSignAndVerify_test()
         {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+
+            var stringsignature = Base58.Encode( servicesigner.SignBytes("test".ToByteArray(), privstring, signalg));
+
+
+            Console.WriteLine(stringsignature);
+
+            servicesigner.VerifySignature(Base58.Encode("test11".ToByteArray()), stringsignature, pubstring, signalg);
+
+            Console.WriteLine("OK");
 
         }
     }

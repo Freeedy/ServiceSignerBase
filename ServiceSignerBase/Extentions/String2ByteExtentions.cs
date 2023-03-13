@@ -150,6 +150,7 @@ namespace ServiceSignerBase
         {
           return   PrivateKeyFactory.CreateKey(Base58.Decode(privatebase58));
         }
+       
 
         public static AsymmetricKeyParameter DeserializePublicKeyFromBase58(this string publicbase58)
         {
