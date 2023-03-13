@@ -54,28 +54,28 @@ namespace ServiceSignerBase
 
             container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase64String()};
             return container;
-            //Constants.SignatureAlgorithmRsaDefault
-
-
-
-          //  return null;
+         
         }
 
         public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)
         {
             if (container.Header == null || string.IsNullOrWhiteSpace(container.Header.Signature)) throw new ArgumentNullException($"{nameof(container.Header.Signature)} is null or empity");
 
-            string signeddata = "";
+            byte[]  signeddata = new byte[0] ;
 
             string[] pattern = container.Header.Pattern.Split('/');
 
             foreach (string patt in pattern)
             {
                 var  val = AttributeHelper.GetPropValue(container.Payload, patt).Value;
-                signeddata += val.ToString();
+                signeddata =signeddata.Concat( Helper.ObjectToByteArray(val)).ToArray();
+
+                // signeddata += val.ToString();
 
             }
-            _signer.VerifySignature(signeddata.ToByteArray().ToBase64String(), container.Header.Signature, publickey, Algorithm);
+            //_signer.Verify(signeddata,container.Header.Signature ,publickey);
+
+            _signer.VerifySignature(signeddata.ToBase64String(), container.Header.Signature, publickey, Algorithm);
         }
 
     }
