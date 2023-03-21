@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ServiceSignerBase.Extentions
 {
-    public static class Helper
+    public  class Helper
     {
 
         public static byte[] ObjectToByteArray(Object obj)
@@ -40,6 +40,24 @@ namespace ServiceSignerBase.Extentions
             }
           
         }
+
+
+        public static byte[] operator + (byte[] arr1, byte[] arr2)     
+        {
+            if (arr1 == null || arr2 == null)
+            {
+                throw new ArgumentNullException("Both byte arrays must be non-null");
+            }
+
+            byte[] result = new byte[arr1.Length + arr2.Length];
+            Buffer.BlockCopy(arr1, 0, result, 0, arr1.Length);
+            Buffer.BlockCopy(arr2, 0, result, arr1.Length, arr2.Length);
+
+            return result;
+        }
+
+        //public static byte[]  A + B 
+        //TODO: Create operatior + for byte arrays 
 
 
     }
