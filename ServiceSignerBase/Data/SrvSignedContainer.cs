@@ -43,6 +43,7 @@ namespace ServiceSignerBase.Data
 
             string[] pattern = Header.Pattern.Split("/"); 
 
+            //TODO: change string to bytearray 
             string payload = string.Empty;
 
 
@@ -54,9 +55,6 @@ namespace ServiceSignerBase.Data
 
                 payload += propval.Value.ToString(); 
             }
-
-
-
 
 
 

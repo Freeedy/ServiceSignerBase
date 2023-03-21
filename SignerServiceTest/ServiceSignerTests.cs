@@ -1,10 +1,12 @@
 ﻿using ServiceSignerBase;
 using ServiceSignerBase.BaseEncoding;
 using ServiceSignerBase.Extentions;
+using SignerServiceTest.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -82,6 +84,40 @@ namespace SignerServiceTest
 
             Console.WriteLine("OK");
 
+        }
+
+        [Fact] 
+        public async Task GenerateKeys_SignAndVerify_Model_test()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+
+            ServiceSigner signer = new ServiceSigner(privstring, pubstring);
+
+            SomeModel model = new SomeModel()
+            {
+                Name = "farid",
+                Surname = "Ismayilzada",
+                TestData = "Test",
+                InnerModel = new InnerModel()
+                {
+                    Year = "2022",
+                    HidedObject = new ThirdObject { HidedName = "Secret" }
+                }
+            };
+
+            var rs = signer.SignDataModel(model);
+
+            var text = JsonSerializer.Serialize(rs);
+
+            signer.ValidateSignatureContainer(rs, pubstring);
         }
     }
 }

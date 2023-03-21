@@ -75,7 +75,7 @@ namespace ServiceSignerBase
             }
             //_signer.Verify(signeddata,container.Header.Signature ,publickey);
 
-            _signer.VerifySignature(signeddata.ToBase64String(), container.Header.Signature, publickey, Algorithm);
+            _signer.VerifySignature(signeddata.ToBase58String(), container.Header.Signature, publickey, Algorithm);
         }
 
     }
