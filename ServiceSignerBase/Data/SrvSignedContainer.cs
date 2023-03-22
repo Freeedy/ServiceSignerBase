@@ -44,7 +44,7 @@ namespace ServiceSignerBase.Data
             string[] pattern = Header.Pattern.Split("/"); 
 
             //TODO: change string to bytearray 
-            string payload = string.Empty;
+            byte[] payload =new byte[] { };
 
 
             foreach (string item in pattern)
@@ -52,8 +52,8 @@ namespace ServiceSignerBase.Data
                 var propval = AttributeHelper.GetPropValue(Payload, item);
 
                 if (propval == null) throw new SrvInvalidSignatureException($"{item} property is null!");
-
-                payload += propval.Value.ToString(); 
+                var propbytes = Helper.ObjectToByteArray(propval.Value);
+                payload = Helper.ConcatenateBytes(payload,propbytes); 
             }
 
 

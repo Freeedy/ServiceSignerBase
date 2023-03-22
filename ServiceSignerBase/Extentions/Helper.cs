@@ -42,7 +42,7 @@ namespace ServiceSignerBase.Extentions
         }
 
 
-        public static byte[] operator + (byte[] arr1, byte[] arr2)     
+        public static byte[] ConcatenateBytes(byte[] arr1, byte[] arr2)     
         {
             if (arr1 == null || arr2 == null)
             {
@@ -56,8 +56,7 @@ namespace ServiceSignerBase.Extentions
             return result;
         }
 
-        //public static byte[]  A + B 
-        //TODO: Create operatior + for byte arrays 
+        
 
 
     }
