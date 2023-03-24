@@ -6,6 +6,7 @@ using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using ServiceSignerBase.BaseEncoding;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +29,16 @@ namespace ServiceSignerBase
             return Convert.ToBase64String(blob);
         }
 
+        public static string ToBase58String(this byte[] blob)
+        {
+            return Base58.Encode(blob);
+        }
+
+        public static byte[] FromBase58String(string source)
+        {
+            return Base58.Decode(source);
+        }
+
 
         public static byte[] ToByteArray(this string text)
         {
@@ -37,22 +48,22 @@ namespace ServiceSignerBase
 
         public static AsymmetricKeyParameter ToPRivateKey(this string source)
         {
-           // source = source.Trim("-----BEGIN RSA PRIVATE KEY-----".ToCharArray());
-           // source=source.Trim("-----END RSA PRIVATE KEY-----".ToCharArray());
+            // source = source.Trim("-----BEGIN RSA PRIVATE KEY-----".ToCharArray());
+            // source=source.Trim("-----END RSA PRIVATE KEY-----".ToCharArray());
 
-           
+
             using (var sr = new StringReader(source))
             {
                 var pemReader = new Org.BouncyCastle.OpenSsl.PemReader(sr);
-                
-                var objnew= (AsymmetricCipherKeyPair)pemReader.ReadObject();
+
+                var objnew = (AsymmetricCipherKeyPair)pemReader.ReadObject();
 
 
 
-                return (RsaKeyParameters) objnew.Private;
+                return (RsaKeyParameters)objnew.Private;
 
-      
-               
+
+
             }
         }
         public static AsymmetricKeyParameter ToPublicKey(this string source)
@@ -64,7 +75,7 @@ namespace ServiceSignerBase
             using (var sr = new StringReader(source))
             {
                 var pemReader = new Org.BouncyCastle.OpenSsl.PemReader(sr);
-                
+
                 var objnew = (RsaKeyParameters)pemReader.ReadObject();
 
 
@@ -81,7 +92,7 @@ namespace ServiceSignerBase
 
             PrivateKeyInfo privateKeyInfo = PrivateKeyInfoFactory.CreatePrivateKeyInfo(key);
             byte[] serializedPrivateBytes = privateKeyInfo.ToAsn1Object().GetDerEncoded();
-           
+
             //  key.as
             return serializedPrivateBytes;
         }
@@ -109,7 +120,7 @@ namespace ServiceSignerBase
 
         public static AsymmetricKeyParameter PrivateKeyFromBytes(this byte[] keybytes)
         {
-           var keyparam = PrivateKeyFactory.CreateKey(keybytes);
+            var keyparam = PrivateKeyFactory.CreateKey(keybytes);
 
             return keyparam;
         }
@@ -128,5 +139,32 @@ namespace ServiceSignerBase
             }
         }
 
+        public static string SerializePrivateKeyToBase58(this AsymmetricKeyParameter key)
+        {
+
+            PrivateKeyInfo privateKeyInfo = PrivateKeyInfoFactory.CreatePrivateKeyInfo(key);
+            byte[] serializedPrivateBytes = privateKeyInfo.ToAsn1Object().GetDerEncoded();
+            string serializedPrivate = Base58.Encode(serializedPrivateBytes);
+            return serializedPrivate;
+        }
+
+
+        public static string SerializePublicKeyToBase58(this AsymmetricKeyParameter key)
+        {
+            SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(key);
+            byte[] serializedPublicBytes = publicKeyInfo.ToAsn1Object().GetDerEncoded();
+            return Base58.Encode(serializedPublicBytes);
+        }
+
+        public static AsymmetricKeyParameter DeserializePrivateKeyFromBase58(this string privatebase58)
+        {
+          return   PrivateKeyFactory.CreateKey(Base58.Decode(privatebase58));
+        }
+       
+
+        public static AsymmetricKeyParameter DeserializePublicKeyFromBase58(this string publicbase58)
+        {
+            return PublicKeyFactory.CreateKey(Base58.Decode(publicbase58));
+        }
     }
 }
