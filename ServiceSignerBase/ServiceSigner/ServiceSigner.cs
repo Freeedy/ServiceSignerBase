@@ -17,15 +17,23 @@ namespace ServiceSignerBase
         private RsaServiceSigner _signer;
 
         string _privateKey; 
+        string _publicKeyString=null;
+
+        byte[] _privateKeyBytes;
+         byte[] _publicKeyBytes= null; 
+
         public ServiceSigner(string privatekey , string publickey=null )
         {
             _privateKey = privatekey;
+            _publicKeyString= publickey;
             _signer = new RsaServiceSigner();   
         }
 
-        public ServiceSigner(byte[] privatekey , byte [] publickey )
+        public ServiceSigner(byte[] privatekey , byte [] publickey =null)
         {
-            
+            _privateKeyBytes = privatekey; 
+            _publicKeyBytes = publickey;
+            _signer= new RsaServiceSigner();
         }
 
 

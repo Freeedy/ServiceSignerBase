@@ -33,6 +33,13 @@ namespace ServiceSignerBase.Signers
             return Sign(datatoSign, privatekey.ToPRivateKey(), digestname); 
         }
 
+
+        public byte[] SignBytes(byte[] datatoSign, byte[] privateKey, string digestname = "SHA-256withRSA")
+        {
+            return Sign(datatoSign, privateKey.PrivateKeyFromBytes(), digestname);
+        }
+
+
         public void VerifySignature(string base64data , string base64signature , string publicKeyString , string digestname= "SHA-256withRSA")
         {
             if(! Verify(base64data.FromBase64String() ,base64signature.FromBase64String() ,publicKeyString.ToPublicKey(), digestname))
