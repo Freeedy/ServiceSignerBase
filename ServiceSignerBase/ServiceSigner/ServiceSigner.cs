@@ -52,38 +52,42 @@ namespace ServiceSignerBase
             for (int i = 0; i < atrts.Count; i++)
             {
                 // tobesigned += atrts[i].Value.ToString();
-                byte[] temp = Helper.ObjectToByteArray(atrts[i]); 
-                tobesigned = tobesigned.Concat(temp).ToArray();
+                byte[] temp = Helper.ObjectToByteArray(atrts[i].Value);
+                // tobesigned = tobesigned.Concat(temp).ToArray();
+                tobesigned = Helper.ConcatenateBytes(tobesigned, temp);
+
                 headerPattern += atrts[i].Route;
                 if (i != atrts.Count - 1) headerPattern += "/"; 
             }
 
             byte[] signature = _signer.SignBytes(tobesigned, _privateKey,Algorithm);
 
-            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase64String()};
+            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase58String()};
             return container;
          
         }
 
         public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)
         {
-            if (container.Header == null || string.IsNullOrWhiteSpace(container.Header.Signature)) throw new ArgumentNullException($"{nameof(container.Header.Signature)} is null or empity");
+            //if (container.Header == null || string.IsNullOrWhiteSpace(container.Header.Signature)) throw new ArgumentNullException($"{nameof(container.Header.Signature)} is null or empity");
 
-            byte[]  signeddata = new byte[0] ;
+            //byte[]  signeddata = new byte[0] ;
 
-            string[] pattern = container.Header.Pattern.Split('/');
+            //string[] pattern = container.Header.Pattern.Split('/');
 
-            foreach (string patt in pattern)
-            {
-                var  val = AttributeHelper.GetPropValue(container.Payload, patt).Value;
-                signeddata =signeddata.Concat( Helper.ObjectToByteArray(val)).ToArray();
+            //foreach (string patt in pattern)
+            //{
+            //    var  val = AttributeHelper.GetPropValue(container.Payload, patt).Value;
+            //    signeddata =signeddata.Concat( Helper.ObjectToByteArray(val)).ToArray();
 
-                // signeddata += val.ToString();
+            //    // signeddata += val.ToString();
 
-            }
-            //_signer.Verify(signeddata,container.Header.Signature ,publickey);
+            //}
+            ////_signer.Verify(signeddata,container.Header.Signature ,publickey);
 
-            _signer.VerifySignature(signeddata.ToBase58String(), container.Header.Signature, publickey, Algorithm);
+            //_signer.VerifySignature(signeddata.ToBase58String(), container.Header.Signature, publickey, Algorithm);
+
+            container.ValidateSignature(publickey);
         }
 
     }

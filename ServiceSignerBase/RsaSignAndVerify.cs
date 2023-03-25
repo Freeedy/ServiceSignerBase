@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace ServiceSignerBase
 {
+	/// <summary>
+	/// TODO: not used 
+	/// </summary>
     public class RsaSignAndVerify
     {
 

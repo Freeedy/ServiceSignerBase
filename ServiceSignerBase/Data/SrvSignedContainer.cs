@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceSignerBase.Enums;
 using ServiceSignerBase.Exceptions;
+using ServiceSignerBase.Signers;
 
 namespace ServiceSignerBase.Data
 {
@@ -56,6 +58,22 @@ namespace ServiceSignerBase.Data
                 payload = Helper.ConcatenateBytes(payload,propbytes); 
             }
 
+            IServiceSigner signer;
+            var algorithm = Util.GetSignAlgorithm(Header.Alg); 
+            switch (algorithm)
+            {
+                case SignAlgorithms.RsaSha256:
+                    signer = new RsaServiceSigner();
+                    break;  
+
+                default: 
+                    throw new   NotSupportedException($" {Header.Alg} not supported ");
+            }
+
+
+            //TODO  : Fix Algorithm name problems 
+
+             signer.VerifySignature(payload,Header.Signature,publicKey,Header.Alg);
 
 
         }

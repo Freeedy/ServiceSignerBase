@@ -42,8 +42,23 @@ namespace ServiceSignerBase.Signers
                 throw new SrvInvalidSignatureException($" Invalid Service Signature , DigestAlg :{digestname}"); 
             }
         }
+        public void VerifySignature(byte[] data, byte[] signature, string publicKeyString, string digestname = "SHA-256withRSA")
+        {
+            if (!Verify(data, signature,
+                    publicKeyString.DeserializePublicKeyFromBase58(), digestname))
+            {
+                throw new SrvInvalidSignatureException($" Invalid Service Signature , DigestAlg :{digestname}");
+            }
+        }
+        public void VerifySignature(byte[] data, string base58signature, string publicKeyString, string digestname = "SHA-256withRSA")
+        {
+            if (!Verify(data, Base58.Decode(base58signature),
+                    publicKeyString.DeserializePublicKeyFromBase58(), digestname))
+            {
+                throw new SrvInvalidSignatureException($" Invalid Service Signature , DigestAlg :{digestname}");
+            }
+        }
 
-     
         public byte[] Sign(byte[] data, AsymmetricKeyParameter privateKey, string digestname)
         {
             ISigner sign = SignerUtilities.GetSigner(digestname);

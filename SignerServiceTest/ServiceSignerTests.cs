@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ServiceSignerBase.Data;
 using Xunit;
 
 namespace SignerServiceTest
@@ -106,10 +107,11 @@ namespace SignerServiceTest
                 Name = "farid",
                 Surname = "Ismayilzada",
                 TestData = "Test",
+                
                 InnerModel = new InnerModel()
                 {
-                    Year = "2022",
-                    HidedObject = new ThirdObject { HidedName = "Secret" }
+                    Year = 2022,
+                    HidedObject = new ThirdObject { HidedName = "Secret" ,LongProp = 50000}
                 }
             };
 
@@ -117,7 +119,22 @@ namespace SignerServiceTest
 
             var text = JsonSerializer.Serialize(rs);
 
-            signer.ValidateSignatureContainer(rs, pubstring);
+            var decer = JsonSerializer.Deserialize<SrvSignedContainer<SomeModel>>(text);
+
+
+
+
+            decer.ValidateSignature(pubstring);
+
+            signer.ValidateSignatureContainer(decer, pubstring);
+
+
+
+            decer.Payload.DateTime=DateTime.Today;
+            decer.Payload.InnerModel.Year = 2000; 
+
+
+            decer.ValidateSignature(pubstring);
         }
     }
 }
