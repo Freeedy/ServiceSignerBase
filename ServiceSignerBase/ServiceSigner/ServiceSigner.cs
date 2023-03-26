@@ -38,6 +38,8 @@ namespace ServiceSignerBase
 
 
         //Tagged: Version 1
+        //TODO: add type signing mechanism for container 
+        //TODO: add type signed containers validation mechanism 
         public SrvSignedContainer<T> SignDataModel<T>(T MOdel)
         {
             SrvSignedContainer<T> container = new SrvSignedContainer<T>();
@@ -65,6 +67,13 @@ namespace ServiceSignerBase
             container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase58String()};
             return container;
          
+        }
+
+        public SrvSignedContainer<T> SignSingleType<T>(T data )
+        {
+            SrvSignedContainer<T> container = new SrvSignedContainer<T>();
+
+            return container;
         }
 
         public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)

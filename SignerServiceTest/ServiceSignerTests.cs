@@ -136,5 +136,27 @@ namespace SignerServiceTest
 
             decer.ValidateSignature(pubstring);
         }
+
+
+        [Fact]
+        public async Task GenerateKeys_SignAndVerifySimpleTypes_test()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+            ServiceSigner srvsigner = new ServiceSigner(privstring, pubstring);
+
+            int tobesigned = 0;
+
+            var result = srvsigner.SignDataModel(tobesigned);
+
+            var text = JsonSerializer.Serialize(result);
+        }
     }
 }
