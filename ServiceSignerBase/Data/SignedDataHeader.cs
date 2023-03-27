@@ -8,7 +8,7 @@ namespace ServiceSignerBase.Data
 {
     public class SignedDataHeader
     {
-        // Name/Surname/Organization.name
+        // Name/Surname/Organization.name || NUll for primitive types 
         public string Pattern { get; set; }
 
         public string Alg { get; set; }

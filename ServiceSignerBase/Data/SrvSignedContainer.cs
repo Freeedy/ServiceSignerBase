@@ -35,18 +35,39 @@ namespace ServiceSignerBase.Data
 
         public  void ValidateSignature(string publicKey)
         {
-            if (Header==null) throw new ArgumentNullException($"Header Is null ");
+            if (Header == null) throw new ArgumentNullException($"Header Is null ");
 
             if (string.IsNullOrWhiteSpace(Header.Signature))
             {
                 throw new SrvInvalidSignatureException("Signature emptiy!");
             }
+            if (string.IsNullOrWhiteSpace(Header.Pattern))
+            {
+                ValidatePrimitiveSignature(publicKey);
+            }
+            else
+            {
+                ValidateModelSignature(publicKey);
+            }
 
 
-            string[] pattern = Header.Pattern.Split("/"); 
+           
+            
+        }
+        
+
+        private void ValidateModelSignature(string publicKey)
+        {
+
+            if (!(typeof(T).IsClass && typeof(T) != typeof(string)))
+            {
+                throw new NotSupportedException($"{typeof(T)} not supported because of Pattern");
+            }
+
+                string[] pattern = Header.Pattern.Split("/");
 
             //TODO: change string to bytearray 
-            byte[] payload =new byte[] { };
+            byte[] payload = new byte[] { };
 
 
             foreach (string item in pattern)
@@ -55,28 +76,53 @@ namespace ServiceSignerBase.Data
 
                 if (propval == null) throw new SrvInvalidSignatureException($"{item} property is null!");
                 var propbytes = Helper.ObjectToByteArray(propval.Value);
-                payload = Helper.ConcatenateBytes(payload,propbytes); 
+                payload = Helper.ConcatenateBytes(payload, propbytes);
             }
 
             IServiceSigner signer;
-            var algorithm = Util.GetSignAlgorithm(Header.Alg); 
+            var algorithm = Util.GetSignAlgorithm(Header.Alg);
             switch (algorithm)
             {
                 case SignAlgorithms.RsaSha256:
                     signer = new RsaServiceSigner();
-                    break;  
+                    break;
 
-                default: 
-                    throw new   NotSupportedException($" {Header.Alg} not supported ");
+                default:
+                    throw new NotSupportedException($" {Header.Alg} not supported ");
             }
 
 
             //TODO  : Fix Algorithm name problems 
 
-             signer.VerifySignature(payload,Header.Signature,publicKey,Header.Alg);
+            signer.VerifySignature(payload, Header.Signature, publicKey, Header.Alg);
 
 
         }
-        
+
+        private void ValidatePrimitiveSignature(string publicKey)
+        {
+            if (typeof(T).IsClass && typeof(T) != typeof(string))
+            {
+                throw new NotSupportedException($"{typeof(T)} not supported because of Pattern");
+
+            }
+            byte[] data = Helper.ObjectToByteArray(Payload);
+
+            IServiceSigner signer;
+            var algorithm = Util.GetSignAlgorithm(Header.Alg);
+            switch (algorithm)
+            {
+                case SignAlgorithms.RsaSha256:
+                    signer = new RsaServiceSigner();
+                    break;
+
+                default:
+                    throw new NotSupportedException($" {Header.Alg} not supported ");
+            }
+
+
+
+            signer.VerifySignature(data, Header.Signature, publicKey, Header.Alg);
+        }
     }
 }

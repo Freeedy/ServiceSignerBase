@@ -95,7 +95,6 @@ namespace ServiceSignerBase.Extentions
         }
 
 
-        //https://stackoverflow.com/questions/54082293/get-full-path-to-the-nested-objects-field-in-c-sharp
         public static SignablePropertyInfo GetPropValue<T>(T src, string propName , SignablePropertyInfo temppath =null)
         {
             var defaultFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance;

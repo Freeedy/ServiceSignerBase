@@ -14,6 +14,8 @@ namespace ServiceSignerBase.Extentions
         public static Dictionary<string, SignAlgorithms> SignAlgorithms = new Dictionary<string, SignAlgorithms>()
         {
             { "SHA-256withRSA", Enums.SignAlgorithms.RsaSha256 },
+            { "SHA-384withRSA", Enums.SignAlgorithms.RsaSha256 },
+            { "RSASHA384", Enums.SignAlgorithms.RsaSha256 },
             { "RSASHA256", Enums.SignAlgorithms.RsaSha256 },
             { "RSA", Enums.SignAlgorithms.RsaSha256 }
         };

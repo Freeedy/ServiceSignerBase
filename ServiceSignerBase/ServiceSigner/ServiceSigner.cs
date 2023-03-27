@@ -36,13 +36,33 @@ namespace ServiceSignerBase
             _signer= new RsaServiceSigner();
         }
 
+        public SrvSignedContainer<T> SignData<T>(T data )
+        {
+            bool isclass = typeof(T).IsClass && typeof(T) != typeof(string);
 
+            if (isclass)
+            {
+                return SignDataModel(data);
+            }
+            else
+            {
+                SrvSignedContainer<T> container = new SrvSignedContainer<T>();
+                byte[] tobesigned = Helper.ObjectToByteArray(data);
+                byte[] signature = _signer.SignBytes(tobesigned, _privateKey, Algorithm);
+
+                container.Header = new SignedDataHeader { Alg = Algorithm, Pattern = null, Signature = signature.ToBase58String() };
+                return container;
+            }
+           
+        }
         //Tagged: Version 1
         //TODO: add type signing mechanism for container 
         //TODO: add type signed containers validation mechanism 
         public SrvSignedContainer<T> SignDataModel<T>(T MOdel)
         {
             SrvSignedContainer<T> container = new SrvSignedContainer<T>();
+
+           
             if (MOdel == null) return null;
             container.Payload = MOdel;
             var atrts = AttributeHelper.GetPropertiesInfo(MOdel);
@@ -69,12 +89,7 @@ namespace ServiceSignerBase
          
         }
 
-        public SrvSignedContainer<T> SignSingleType<T>(T data )
-        {
-            SrvSignedContainer<T> container = new SrvSignedContainer<T>();
-
-            return container;
-        }
+       
 
         public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)
         {

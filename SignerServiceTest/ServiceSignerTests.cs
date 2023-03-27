@@ -154,9 +154,15 @@ namespace SignerServiceTest
 
             int tobesigned = 0;
 
-            var result = srvsigner.SignDataModel(tobesigned);
+            var result = srvsigner.SignData(tobesigned);
 
             var text = JsonSerializer.Serialize(result);
+
+
+            result.ValidateSignature(pubstring);
+
+            result.Payload = 5;
+          //  result.ValidateSignature(privstring);
         }
     }
 }

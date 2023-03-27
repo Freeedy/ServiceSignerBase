@@ -9,7 +9,8 @@ namespace ServiceSignerBase.Enums
     public enum SignAlgorithms
     {
         RsaSha256 = 0,
-        ECDSASha256=1 
+        RsaSha384=1,
+        ECDSASha256=2
 
     }
 }
