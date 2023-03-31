@@ -10,33 +10,84 @@ using System.Threading.Tasks;
 
 namespace ServiceSignerBase
 {
-    public class ServiceSigner  
+    public class ServiceSigner
     {
         public string Algorithm { get { return Constants.SignatureAlgorithmRsaDefault; } }
 
         private RsaServiceSigner _signer;
 
-        string _privateKey; 
-        string _publicKeyString=null;
+        string _privateKey;
+        string _publicKeyString = null;
 
         byte[] _privateKeyBytes;
-         byte[] _publicKeyBytes= null; 
+        byte[] _publicKeyBytes = null;
 
-        public ServiceSigner(string privatekey , string publickey=null )
+        public ServiceSigner(string algorithm, string privatekey, string publickey = null)
         {
-            _privateKey = privatekey;
-            _publicKeyString= publickey;
-            _signer = new RsaServiceSigner();   
+            SetPrivateKey(privatekey);
+            if (publickey != null) SetPublicKey(publickey);
+            var alg = Util.GetSignAlgorithm(algorithm);
+            switch (alg)
+            {
+                case Enums.SignAlgorithms.RsaSha256:
+                    _signer = new RsaServiceSigner();
+                    break;
+
+                default:
+                    throw new NotSupportedException($"{algorithm} is not supported!");
+            }
         }
 
-        public ServiceSigner(byte[] privatekey , byte [] publickey =null)
+        public ServiceSigner(string algorithm, byte[] privatekey, byte[] publickey = null)
         {
-            _privateKeyBytes = privatekey; 
-            _publicKeyBytes = publickey;
-            _signer= new RsaServiceSigner();
+           SetPrivateKey(privatekey);
+            if (publickey!=null) SetPublicKey(publickey);
+
+            var alg = Util.GetSignAlgorithm(algorithm);
+            switch (alg)
+            {
+                case Enums.SignAlgorithms.RsaSha256:
+                    _signer = new RsaServiceSigner();
+                    break;
+
+                default:
+                    throw new NotSupportedException($"{algorithm} is not supported!");
+            }
+
         }
 
-        public SrvSignedContainer<T> SignData<T>(T data )
+
+        public ServiceSigner(string algorithm)
+        {
+            var alg = Util.GetSignAlgorithm(algorithm);
+            switch (alg)
+            {
+                case Enums.SignAlgorithms.RsaSha256:
+                    _signer = new RsaServiceSigner();
+                    break;
+
+                default:
+                    throw new NotSupportedException($"{algorithm} is not supported!");
+            }
+        }
+
+
+        public void SetPrivateKey(string privateKey)
+        { _privateKey = privateKey; }
+
+        public void SetPrivateKey(byte[] privateKey)
+        { _privateKeyBytes = privateKey; }
+
+        public void SetPublicKey(string publickey)
+        {
+            _publicKeyString = publickey;
+        }
+
+        public void SetPublicKey(byte[] publicKey) { _publicKeyBytes = publicKey; }
+
+
+
+        public SrvSignedContainer<T> SignData<T>(T data)
         {
             bool isclass = typeof(T).IsClass && typeof(T) != typeof(string);
 
@@ -53,7 +104,7 @@ namespace ServiceSignerBase
                 container.Header = new SignedDataHeader { Alg = Algorithm, Pattern = null, Signature = signature.ToBase58String() };
                 return container;
             }
-           
+
         }
         //Tagged: Version 1
         //TODO: add type signing mechanism for container 
@@ -62,7 +113,7 @@ namespace ServiceSignerBase
         {
             SrvSignedContainer<T> container = new SrvSignedContainer<T>();
 
-           
+
             if (MOdel == null) return null;
             container.Payload = MOdel;
             var atrts = AttributeHelper.GetPropertiesInfo(MOdel);
@@ -79,17 +130,17 @@ namespace ServiceSignerBase
                 tobesigned = Helper.ConcatenateBytes(tobesigned, temp);
 
                 headerPattern += atrts[i].Route;
-                if (i != atrts.Count - 1) headerPattern += "/"; 
+                if (i != atrts.Count - 1) headerPattern += "/";
             }
 
-            byte[] signature = _signer.SignBytes(tobesigned, _privateKey,Algorithm);
+            byte[] signature = _signer.SignBytes(tobesigned, _privateKey, Algorithm);
 
-            container.Header = new SignedDataHeader { Alg = Algorithm ,Pattern=headerPattern ,Signature=signature.ToBase58String()};
+            container.Header = new SignedDataHeader { Alg = Algorithm, Pattern = headerPattern, Signature = signature.ToBase58String() };
             return container;
-         
+
         }
 
-       
+
 
         public void ValidateSignatureContainer<T>(SrvSignedContainer<T> container, string publickey)
         {

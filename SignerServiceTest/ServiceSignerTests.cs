@@ -95,7 +95,6 @@ namespace SignerServiceTest
 
             var servicesigner = Util.GetSigner("rsa");
 
-
             var privstring = keypair.Private.SerializePrivateKeyToBase58();
             var pubstring = keypair.Public.SerializePublicKeyToBase58();
 
