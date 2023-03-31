@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ServiceSignerBase.Data;
 using Xunit;
+using ServiceSignerBase.Exceptions;
 
 namespace SignerServiceTest
 {
@@ -64,7 +65,7 @@ namespace SignerServiceTest
         }
 
         [Fact]
-        public async Task GenerateKeyAndSignAndVerify_test()
+        public async Task GenerateKeyAndSignAndVerify_OK_test()
         {
             string signalg = "SHA-256withRSA";
             var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
@@ -88,7 +89,7 @@ namespace SignerServiceTest
         }
 
         [Fact] 
-        public async Task GenerateKeys_SignAndVerify_Model_test()
+        public async Task GenerateKeys_SignAndVerify_Model_OK_test()
         {
             string signalg = "SHA-256withRSA";
             var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
@@ -99,7 +100,7 @@ namespace SignerServiceTest
             var pubstring = keypair.Public.SerializePublicKeyToBase58();
 
 
-            ServiceSigner signer = new ServiceSigner(privstring, pubstring);
+            ServiceSigner signer = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256,privstring, pubstring);
 
             SomeModel model = new SomeModel()
             {
@@ -136,7 +137,49 @@ namespace SignerServiceTest
             decer.ValidateSignature(pubstring);
         }
 
+        [Fact]
+        public async Task GenerateKeys_SignAndVerify_Model_Break_test()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
 
+            var servicesigner = Util.GetSigner("rsa");
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+
+            ServiceSigner signer = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256, privstring, pubstring);
+
+            SomeModel model = new SomeModel()
+            {
+                Name = "farid",
+                Surname = "Ismayilzada",
+                TestData = "Test",
+
+                InnerModel = new InnerModel()
+                {
+                    Year = 2022,
+                    HidedObject = new ThirdObject { HidedName = "Secret", LongProp = 50000 }
+                }
+            };
+
+            var rs = signer.SignDataModel(model);
+
+            var text = JsonSerializer.Serialize(rs);
+
+            var decer = JsonSerializer.Deserialize<SrvSignedContainer<SomeModel>>(text);
+
+
+            decer.Payload.DateTime = DateTime.Today;
+            decer.Payload.InnerModel.Year = 2000;
+
+
+
+
+            Assert.Throws(typeof(SrvInvalidSignatureException),
+                () => { decer.ValidateSignature(pubstring); });
+        }
         [Fact]
         public async Task GenerateKeys_SignAndVerifySimpleTypes_test()
         {
@@ -149,7 +192,7 @@ namespace SignerServiceTest
             var privstring = keypair.Private.SerializePrivateKeyToBase58();
             var pubstring = keypair.Public.SerializePublicKeyToBase58();
 
-            ServiceSigner srvsigner = new ServiceSigner(privstring, pubstring);
+            ServiceSigner srvsigner = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256, privstring, pubstring);
 
             int tobesigned = 0;
 

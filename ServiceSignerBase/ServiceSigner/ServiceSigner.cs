@@ -1,5 +1,6 @@
 ﻿using Org.BouncyCastle.Crypto;
 using ServiceSignerBase.Data;
+using ServiceSignerBase.Enums;
 using ServiceSignerBase.Extentions;
 using ServiceSignerBase.Signers;
 using System;
@@ -22,12 +23,12 @@ namespace ServiceSignerBase
         byte[] _privateKeyBytes;
         byte[] _publicKeyBytes = null;
 
-        public ServiceSigner(string algorithm, string privatekey, string publickey = null)
+        public ServiceSigner(SignAlgorithms algorithm, string privatekey, string publickey = null)
         {
             SetPrivateKey(privatekey);
             if (publickey != null) SetPublicKey(publickey);
-            var alg = Util.GetSignAlgorithm(algorithm);
-            switch (alg)
+          
+            switch (algorithm)
             {
                 case Enums.SignAlgorithms.RsaSha256:
                     _signer = new RsaServiceSigner();
@@ -38,13 +39,13 @@ namespace ServiceSignerBase
             }
         }
 
-        public ServiceSigner(string algorithm, byte[] privatekey, byte[] publickey = null)
+        public ServiceSigner(SignAlgorithms algorithm, byte[] privatekey, byte[] publickey = null)
         {
            SetPrivateKey(privatekey);
             if (publickey!=null) SetPublicKey(publickey);
 
-            var alg = Util.GetSignAlgorithm(algorithm);
-            switch (alg)
+          
+            switch (algorithm)
             {
                 case Enums.SignAlgorithms.RsaSha256:
                     _signer = new RsaServiceSigner();
@@ -57,10 +58,10 @@ namespace ServiceSignerBase
         }
 
 
-        public ServiceSigner(string algorithm)
+        public ServiceSigner(SignAlgorithms algorithm)
         {
-            var alg = Util.GetSignAlgorithm(algorithm);
-            switch (alg)
+            
+            switch (algorithm)
             {
                 case Enums.SignAlgorithms.RsaSha256:
                     _signer = new RsaServiceSigner();

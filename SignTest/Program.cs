@@ -84,7 +84,7 @@ namespace SignTest
 
             var privstring = keypair.Private.ToPembase64String();
             var pubstring = keypair.Public.ToPembase64String();
-            ServiceSigner signer = new ServiceSigner(privstring, pubstring);
+            ServiceSigner signer = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256,privstring, pubstring);
 
             SomeModel model = new SomeModel()
             {
