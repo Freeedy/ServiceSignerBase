@@ -180,8 +180,9 @@ namespace SignerServiceTest
             Assert.Throws(typeof(SrvInvalidSignatureException),
                 () => { decer.ValidateSignature(pubstring); });
         }
+       
         [Fact]
-        public async Task GenerateKeys_SignAndVerifySimpleTypes_test()
+        public async Task GenerateKeys_SignAndVerifyInt_test()
         {
             string signalg = "SHA-256withRSA";
             var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
@@ -206,5 +207,66 @@ namespace SignerServiceTest
             result.Payload = 5;
           //  result.ValidateSignature(privstring);
         }
+
+
+        [Fact]
+        public async Task GenerateKeys_SignAndVerifyInt_breakTest()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+            ServiceSigner srvsigner = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256, privstring, pubstring);
+
+            int tobesigned = 0;
+
+            var result = srvsigner.SignData(tobesigned);
+
+            var text = JsonSerializer.Serialize(result);
+
+
+           
+
+            result.Payload = 5;
+            Assert.Throws(typeof(SrvInvalidSignatureException),
+              () => { result.ValidateSignature(pubstring); });
+           
+        }
+
+        [Fact]
+        public async Task GenerateKeys_SignAndVerifyDateTime_breakTest()
+        {
+            string signalg = "SHA-256withRSA";
+            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+            var servicesigner = Util.GetSigner("rsa");
+
+
+            var privstring = keypair.Private.SerializePrivateKeyToBase58();
+            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+
+            ServiceSigner srvsigner = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256, privstring, pubstring);
+
+            DateTime tobesigned = DateTime.Now;
+
+            var result = srvsigner.SignData(tobesigned);
+
+            var text = JsonSerializer.Serialize(result);
+
+
+
+
+            result.Payload = DateTime.Now;
+            Assert.Throws(typeof(SrvInvalidSignatureException),
+              () => { result.ValidateSignature(pubstring); });
+
+        }
+
+
     }
 }
