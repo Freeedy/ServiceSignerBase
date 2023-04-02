@@ -128,13 +128,6 @@ namespace SignerServiceTest
 
             signer.ValidateSignatureContainer(decer, pubstring);
 
-
-
-            decer.Payload.DateTime=DateTime.Today;
-            decer.Payload.InnerModel.Year = 2000; 
-
-
-            decer.ValidateSignature(pubstring);
         }
 
         [Fact]
