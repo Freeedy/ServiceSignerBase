@@ -19,7 +19,7 @@ namespace ServiceSignerBase.Signers
            
 
             var rsaKeyPairGen = new RsaKeyPairGenerator();
-            rsaKeyPairGen.Init(new KeyGenerationParameters(new SecureRandom(), 2048));
+            rsaKeyPairGen.Init(new KeyGenerationParameters(new SecureRandom(), keylenght));
             return rsaKeyPairGen.GenerateKeyPair();
         }
 

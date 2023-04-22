@@ -1,0 +1,23 @@
+{
+  "Version": "1.0.1",
+  "Payload": {
+    "Name": "farid",
+    "TestData": "Test",
+    "Surname": "Ismayilzada",
+    "DateTime": "2023-04-22T18:48:37.3287232+04:00",
+    "InnerModel": {
+      "Id": "TestID",
+      "Year": 2022,
+      "HidedObject": {
+        "HidedName": "Secret",
+        "LongProp": 50000,
+        "ModelSam": null
+      }
+    }
+  },
+  "Header": {
+    "Pattern": "Name/Surname/DateTime/InnerModel.Year/InnerModel.HidedObject.HidedName/InnerModel.HidedObject.LongProp",
+    "Alg": "SHA-256withRSA",
+    "Signature": "7U4uc7VAEijstMhre6LFXCPLmxPaLp4WDfC9wVJRYr5KDnjn2YA5Y8E9bYcJakpVQrv3qUtz7di3wRfLcx2J3Yt3gDjRGnhfAh4Pr3BcLXBLtmqSVB82fgrQc88fAgURqXBdh3o6dNjxdity89zpMMHgGV98BqHJmS5ijtFzTh42tqhRBKmDUF5Fcmv5p1NbTepSprqQfuYHsZ3ZEyHKSP84dJJxZRQLUXWHUmn6fwvD5vTyhqX3n36HPm129B5h2QDgofo6rKp6DNep1FiuRrs9j9mqBjVUb8eGVYfZAPwctPa3VexxpvZZ1uWxhZvusnRoyNua4c6jy225CjDdG9RXDfS6P1"
+  }
+}
