@@ -34,7 +34,7 @@ namespace ServiceSignerBase
             return Base58.Encode(blob);
         }
 
-        public static byte[] FromBase58String(string source)
+        public static byte[] FromBase58String( this string source)
         {
             return Base58.Decode(source);
         }

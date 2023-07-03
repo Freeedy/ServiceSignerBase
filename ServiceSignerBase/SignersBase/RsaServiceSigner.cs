@@ -24,9 +24,9 @@ namespace ServiceSignerBase.Signers
         }
 
         //TODO: Should change when multiple algorithm supported 
-        public string SignData(string base64data , string privateKey , string digestname= "SHA-256withRSA")
+        public string SignData(string base58data , string privateKey , string digestname= "SHA-256withRSA")
         {
-            return Sign(base64data.FromBase64String() , privateKey.ToPRivateKey(), digestname).ToBase64String();
+            return Sign(base58data.FromBase58String() , privateKey.ToPRivateKey(), digestname).ToBase64String();
         }
 
         public byte[] SignBytes(byte[] datatoSign, string privatekey, string digestname = "SHA-256withRSA")

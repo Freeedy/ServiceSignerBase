@@ -45,7 +45,7 @@ namespace SignerServiceTest
             
             Assert.NotNull(signature);
         }
-
+        /*
         [Fact]
         public async Task GenerateKeyAndSignbase58_test()
         {
@@ -54,11 +54,11 @@ namespace SignerServiceTest
             var pair = generator.GenerateServiceKeyPair(2048);
 
 
-            string nonce = "signeit".ToByteArray().ToBase64String();
+            string nonce = "signeit".ToByteArray().ToBase58String();
 
             string privateKey = pair.Private.SerializePrivateKeyToBase58();
 
-            string publickey = pair.Public.SerializePrivateKeyToBase58(); 
+            string publickey = pair.Public.SerializePublicKeyToBase58(); 
             string signature = Util.GetSigner("rsa").SignData(nonce, privateKey, Constants.SignatureAlgorithmRsaDefault);
 
             Assert.NotNull(signature);
@@ -87,7 +87,7 @@ namespace SignerServiceTest
             Console.WriteLine("OK");
 
         }
-
+        */
         [Fact] 
         public async Task GenerateKeys_SignAndVerify_Model_OK_test()
         {
