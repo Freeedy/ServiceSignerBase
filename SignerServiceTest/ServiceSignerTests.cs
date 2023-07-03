@@ -28,66 +28,66 @@ namespace SignerServiceTest
 
             Assert.NotNull(pair);
         }
-
-        [Fact]
-        public async Task GenerateKeyAndSign_test()
-        {
-            var generator = Util.GetKeyPairProvider("rsa");
-
-            var pair = generator.GenerateServiceKeyPair(2048);
-
-
-            string nonce ="signeit".ToByteArray().ToBase64String();
-
-            string privateKey= pair.Private.ToPembase64String();
-
-            string signature = Util.GetSigner("rsa").SignData(nonce , privateKey ,Constants.SignatureAlgorithmRsaDefault);
-            
-            Assert.NotNull(signature);
-        }
         /*
-        [Fact]
-        public async Task GenerateKeyAndSignbase58_test()
-        {
-            var generator = Util.GetKeyPairProvider("rsa");
+       [Fact]
+       public async Task GenerateKeyAndSign_test()
+       {
+           var generator = Util.GetKeyPairProvider("rsa");
 
-            var pair = generator.GenerateServiceKeyPair(2048);
-
-
-            string nonce = "signeit".ToByteArray().ToBase58String();
-
-            string privateKey = pair.Private.SerializePrivateKeyToBase58();
-
-            string publickey = pair.Public.SerializePublicKeyToBase58(); 
-            string signature = Util.GetSigner("rsa").SignData(nonce, privateKey, Constants.SignatureAlgorithmRsaDefault);
-
-            Assert.NotNull(signature);
-        }
-
-        [Fact]
-        public async Task GenerateKeyAndSignAndVerify_OK_test()
-        {
-            string signalg = "SHA-256withRSA";
-            var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
-
-            var servicesigner = Util.GetSigner("rsa");
+           var pair = generator.GenerateServiceKeyPair(2048);
 
 
-            var privstring = keypair.Private.SerializePrivateKeyToBase58();
-            var pubstring = keypair.Public.SerializePublicKeyToBase58();
+           string nonce ="signeit".ToByteArray().ToBase64String();
+
+           string privateKey= pair.Private.ToPembase64String();
+
+           string signature = Util.GetSigner("rsa").SignData(nonce , privateKey ,Constants.SignatureAlgorithmRsaDefault);
+
+           Assert.NotNull(signature);
+       }
+
+       [Fact]
+       public async Task GenerateKeyAndSignbase58_test()
+       {
+           var generator = Util.GetKeyPairProvider("rsa");
+
+           var pair = generator.GenerateServiceKeyPair(2048);
 
 
-            var stringsignature = Base58.Encode( servicesigner.SignBytes("test".ToByteArray(), privstring, signalg));
+           string nonce = "signeit".ToByteArray().ToBase58String();
+
+           string privateKey = pair.Private.SerializePrivateKeyToBase58();
+
+           string publickey = pair.Public.SerializePublicKeyToBase58(); 
+           string signature = Util.GetSigner("rsa").SignData(nonce, privateKey, Constants.SignatureAlgorithmRsaDefault);
+
+           Assert.NotNull(signature);
+       }
+
+       [Fact]
+       public async Task GenerateKeyAndSignAndVerify_OK_test()
+       {
+           string signalg = "SHA-256withRSA";
+           var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
+
+           var servicesigner = Util.GetSigner("rsa");
 
 
-            Console.WriteLine(stringsignature);
+           var privstring = keypair.Private.SerializePrivateKeyToBase58();
+           var pubstring = keypair.Public.SerializePublicKeyToBase58();
 
-            servicesigner.VerifySignature(Base58.Encode("test11".ToByteArray()), stringsignature, pubstring, signalg);
 
-            Console.WriteLine("OK");
+           var stringsignature = Base58.Encode( servicesigner.SignBytes("test".ToByteArray(), privstring, signalg));
 
-        }
-        */
+
+           Console.WriteLine(stringsignature);
+
+           servicesigner.VerifySignature(Base58.Encode("test11".ToByteArray()), stringsignature, pubstring, signalg);
+
+           Console.WriteLine("OK");
+
+       }
+       */
         [Fact] 
         public async Task GenerateKeys_SignAndVerify_Model_OK_test()
         {
