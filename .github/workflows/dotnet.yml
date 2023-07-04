@@ -1,5 +1,8 @@
 name: CI
 
+env:
+  VERSION: 1.0.0
+
 on:
   push:
     branches:
@@ -7,10 +10,6 @@ on:
     tags:
       - '**'
   pull_request:
-
-env:
-  VERSION: 1.0.0
-
 
 jobs:
   build:
@@ -45,15 +44,8 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Determine version
-        run: |
-          echo "Running git describe"
-          git describe --tags --dirty
-          echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
-
       - name: Pack
         run: dotnet pack --output ./artifacts --configuration Release -p:PackageVersion=$VERSION -p:NuGetVersion=$VERSION
-
 
       - uses: actions/upload-artifact@v2
         with:
