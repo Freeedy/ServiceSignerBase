@@ -8,8 +8,6 @@
     <RepositoryUrl>https://github.com/AZE-DPC-SXM-DEV/sima-packages</RepositoryUrl>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
-    <PackageVersion>$(Version)</PackageVersion>
-    <NuGetVersion>$(Version)</NuGetVersion>
   </PropertyGroup>
 
   <ItemGroup>
