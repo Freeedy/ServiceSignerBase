@@ -48,7 +48,7 @@ jobs:
         run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
 
       - name: Pack
-        run: dotnet pack --output ./artifacts --configuration Release -p:PackageVersion=$VERSION -p:NuGetVersion=$VERSION
+        run: dotnet pack --output ./artifacts --configuration Release -p:PackageVersion=1.0.0 -p:NuGetVersion=1.0.0
 
       - uses: actions/upload-artifact@v2
         with:
