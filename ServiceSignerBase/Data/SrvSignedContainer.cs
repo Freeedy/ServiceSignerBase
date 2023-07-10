@@ -10,15 +10,15 @@ using ServiceSignerBase.Signers;
 
 namespace ServiceSignerBase.Data
 {
-    public  class SrvSignedContainer<T> : ISignedContract<T>
+    public class SrvSignedContainer<T> : ISignedContract<T>
     {
 
-        public SrvSignedContainer(T payload , string pattern , string algorithm )
+        public SrvSignedContainer(T payload, string pattern, string algorithm)
         {
             Payload = payload;
-            Header = new SignedDataHeader { Alg = algorithm  ,Pattern=pattern };
+            Header = new SignedDataHeader { Alg = algorithm, Pattern = pattern };
         }
-        public SrvSignedContainer(T payload , string pattern ) :this(payload ,pattern, Constants.SignatureAlgorithmRsaDefault)
+        public SrvSignedContainer(T payload, string pattern) : this(payload, pattern, Constants.SignatureAlgorithmRsaDefault)
         {
 
         }
@@ -27,13 +27,18 @@ namespace ServiceSignerBase.Data
 
         }
 
-        public string Version { get; set; } = "1.0.1"; 
-        public T Payload { get ;  set; }
+        public string Version { get; set; } = "1.0.1";
+        public T Payload { get; set; }
+
+        public string SignedModelType
+        {
+            get { return typeof(T).Name; }
+        }
 
 
         public SignedDataHeader? Header { get; set; }
 
-        public  void ValidateSignature(string publicKey)
+        public void ValidateSignature(string publicKey)
         {
             if (Header == null) throw new ArgumentNullException($"Header Is null ");
 
@@ -51,10 +56,10 @@ namespace ServiceSignerBase.Data
             }
 
 
-           
-            
+
+
         }
-        
+
 
         private void ValidateModelSignature(string publicKey)
         {
@@ -64,7 +69,7 @@ namespace ServiceSignerBase.Data
                 throw new NotSupportedException($"{typeof(T)} not supported because of Pattern");
             }
 
-                string[] pattern = Header.Pattern.Split("/");
+            string[] pattern = Header.Pattern.Split("/");
 
             //TODO: change string to bytearray 
             byte[] payload = new byte[] { };

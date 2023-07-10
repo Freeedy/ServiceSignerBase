@@ -158,6 +158,7 @@ namespace SignerServiceTest
             };
 
             var rs = signer.SignDataModel(model);
+            string name = rs.SignedModelType;
 
             var text = JsonSerializer.Serialize(rs);
 
@@ -170,8 +171,7 @@ namespace SignerServiceTest
 
 
 
-            Assert.Throws(typeof(SrvInvalidSignatureException),
-                () => { decer.ValidateSignature(pubstring); });
+            Assert.Throws(typeof(SrvInvalidSignatureException), () => { decer.ValidateSignature(pubstring); });
         }
        
         [Fact]
