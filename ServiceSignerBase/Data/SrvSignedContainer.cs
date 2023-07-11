@@ -44,7 +44,7 @@ namespace ServiceSignerBase.Data
 
             if (string.IsNullOrWhiteSpace(Header.Signature))
             {
-                throw new SrvInvalidSignatureException("Signature emptiy!");
+                throw new SrvInvalidSignatureException("Signature empty!");
             }
             if (string.IsNullOrWhiteSpace(Header.Pattern))
             {
