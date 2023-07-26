@@ -1,13 +1,15 @@
-# Service Signer 
 
-## Overview 
+# Service Signer
 
-Service Signer util is a mechanism of checkgin integrity of each service and  validating their results. The services that has an interaction of data between themselves does not need to use any  online  call for checking the data that is been provided. We are using digital signature technigue in here.    
+Introducing "Service Signer" - a powerful library designed to enhance your API interactions. With Service Signer, you can effortlessly sign each request to any service and receive authenticated responses. By implementing key pair logic (public and private keys), this library ensures the security and integrity of your API communications. Say goodbye to manual response validation requests, as Service Signer significantly reduces the need for such interactions, helping you optimize and decrease your overall request count. Streamline your API integration with ease and peace of mind using Service Signer.
 
-Example of MOdels 
-Thera are Services that has an interaction between . A , B ,C ,D 
-Lets call 
 
+# Overview
+
+Introducing Service Signer Util - a robust mechanism for ensuring the integrity of each service, signing and validating their results. This powerful utility enables seamless data interaction between services without the need for online calls to verify the provided data. Leveraging cutting-edge digital signature techniques, Service Signer Util guarantees the authenticity and reliability of the exchanged information. Say goodbye to unnecessary online checks and embrace a streamlined, secure, and efficient data communication system between your services.
+
+Let's deep dive with the examples:
+Imagine a scenario with four services - A, B, C, and D:
 
 * A -  Catalog Service 
     - Provides Products with prices 
@@ -19,7 +21,6 @@ Lets call
     - Verify Order information 
     - Verify Product Information 
 
-
 ```mermaid
   graph TD;
       A(Catalog)-->|Product info |B(ORder API );
@@ -27,13 +28,22 @@ Lets call
       C-->|Get Product Info|A
    
 ```
-Using This technique you don't need to call the each api for verifying their results. 
 
-## Service Signer Elements 
-    Each service has their own key pairs(public , private). First You have to generate them. Then you have to initialize the service signer with  signer key(private). It means the data that your service produce will be signed, and not all of the elements needs to be signed. If it is a complex model you can mark them , if it is primitive type no need for that.  
+These services interact with each other, and Service Signer simplifies the process of checking the data they exchange.
+
+
+## Service Signer Elements
+
+`Each service has its own key pairs (public and private). You'll need to generate these key pairs and initialize the service signer with the private key. The data produced by your service will be signed, and you can choose which elements need to be signed, based on the complexity of the model.`
 
 ## Installation
+You can download the ServiceSignerBase package from NuGet Package Manager using the following command:
+```java
+dotnet add package ServiceSignerBase --version 1.0.2
+```
+Once installed, you can start using the Service Signer in your project.
 
+First stage, generate key pairs for your service and save it on your environment(config file, settings, database etc). Then, share public key with the service that will consume and validate this service.
 ```java
  string signalg = "SHA-256withRSA";
  var keypair = Util.GetKeyPairProvider("rsa").GenerateServiceKeyPair(2048);
@@ -41,39 +51,32 @@ Using This technique you don't need to call the each api for verifying their res
  var privstring = keypair.Private.SerializePrivateKeyToBase58();
  var pubstring = keypair.Public.SerializePublicKeyToBase58();
 ```
+**NOTE:** **The key generation process is not part of the application cycle. It must be created externally and then must be added to the application environment.**
 
-privstring is your private key. pubstring is a shared key. 
-
-
-## Sign Something 
-
+## Sign Something
 ### Sign Primitive types. Int , date , string , byte etc ...
-
 
 ```java
  ServiceSigner srvsigner = new ServiceSigner(ServiceSignerBase.Enums.SignAlgorithms.RsaSha256, privstring, pubstring);
  int tobesigned = 0; // signed payload
  var result = srvsigner.SignData(tobesigned);
 ```
-we are signing the '0' as a payload. 
-that is what we get. 
+In this example, we are signing the value '0' as the payload. The resulting signed payload will look like this in JSON format:
 ```json
 {
-  "Version": "1.0.1",
-  "Payload": 0,
-  "Header": {
-    "Pattern": null,
-    "Alg": "SHA-256withRSA",
-    "Signature": "7KgHk1F8uEEDx2unLAZQvTojMMXEuHSq6safCNAqvXcVkHCsXvUMqbpc5upYDgLfyAeLM8HiPjkVHQmdzzWXKnFMD4LetkYNPxRdbjPiwVYhULJgGzWJSfkwiewkJ9aQ8Vr1oJugwDxwqAnvBnye9oLqb483XWErV79TLcXLJf8YjHNMGViNajdmYQd4CnqMWxuJaaSZMJcWUajA2NBwcJ9bNqckTn5soUcDWAZ9ukjJzLC11U1tcGUwhBT59PSX9i8LVQTmpcNgxWH4hCoFiSnaRU9sRR3wMJTPjdLchgyhpteaBYwKXC8Us6WshhUeKXbp96rG2h3fh1fXTdNFbEqHe8ooF9"
-  }
+	"Version": "1.0.1",
+	"Payload": 0,
+	"SignedModelType": "Int32",
+	"Header": {
+		"Pattern": null,
+		"Alg": "SHA-256withRSA",
+		"Signature": "3y2Con4UdVoyskfbVuFaGmtuF98cYcpVsLrZjE31f9mdtfanNUBNjzF4pnG9sS7Mu9CfCJDN8tB3d3m2XHn8JTgMVceMtfgohNwzayGM6GbaanywJvFa3yaLDcLmnRdiE3496YtNtxzpMmfxs5Za6fEUPxa5B7EE5XJE6CY4B7UzMyQEah38DbfwgyA588b4KNY3D6LbJRCb5hVtwLkYdE8p7dpLrhXEs8AYPnbhrQ2YvfK9cdSGzUXUKyN8gstCqw1Y6ZX2rA9NzEq3wkhUJnWBXWZHDpgsaiSqsDzQTBNE8tctRUa6EGSFV5YjMcELtCv1zxbSi4T4jZ6iSFiLcr5nLddRA8"
+	}
 }
 ```
-
-the same example can be showed with other  single types. 
-
-### Complex type singing
-Th  model that you want not sign 
-
+This technique can be applied to other single types as well.
+### Complex Type Signing
+For complex models, you can choose which properties to sign by marking them with **[Signable]**.
 ```java
   public class SomeModel
     {
@@ -103,13 +106,11 @@ Th  model that you want not sign
         public InnerModel ModelSam { get; set; }
     }
 ```
-
-All the properties that is been marked as a **Signable** will be signed. 
-
-The Output 
+All properties marked with **[Signable]** will be signed. The output will look like this in JSON format:
 ```json
 {
   "Version": "1.0.1",
+  "SignedModelType": "SomeModel",
   "Payload": {
     "Name": "farid",
     "TestData": "Test",
@@ -132,14 +133,15 @@ The Output
   }
 }
 ```
+## Verify the Record of Other Service 
 
+While checking the integrity of the signed model if the data has been changed the `SrvInvalidSignatureException` exception will be thrown.
 
-## Verify the Record of other service 
-
+To verify a record from another service, use the following:
 ```java
  var decer = JsonSerializer.Deserialize<SrvSignedContainer<SomeModel>>(text);
  decer.ValidateSignature(pubstring);
  signer.ValidateSignatureContainer(decer, pubstring);
 ```
 
-Pubstring is shared key of the service that the data belongs. 
+`pubstring` represents the shared key of the service to which the data belongs.
